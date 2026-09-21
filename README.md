@@ -107,13 +107,13 @@ Then we replace the existing output layer:
 #### Evaluation
 Download the pretrained model and run:
 ```
-python train.py   --model mobilenetv3_small_100 --data-dir /Data/Imagenet   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01   --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --resume mobilenetv3pbfeat256.pth.tar --paraboloidfeat256 True --eval True
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidfeat256 True --eval True --resume mobilenetv3pbfeat256.pth.tar
 ```
 replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
 #### Training from scratch
 Run:
 ```
-python train.py   --model mobilenetv3_small_100 --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01   --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --resume mobilenetv3pbfeat256.pth.tar --paraboloidfeat256 True --eval True
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidfeat256 True
 ```
 replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
 
