@@ -75,13 +75,13 @@ Note that ```ParaboloidOutput``` is the same as ```Paraboloid```, it just uses a
 #### Evaluation
 Download the pretrained model and run:
 ```
-python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.0  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --eval True --paraboloidout True --resume mobilenetv3pbout.pth.tar
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.9  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --eval True --paraboloidout True --resume mobilenetv3pbout.pth.tar
 ```
 replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
 #### Training from scratch
 Run:
 ```
-python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.0  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidout True
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.9  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidout True
 ```
 
 - ### mobilenetv3-pbfeat256
