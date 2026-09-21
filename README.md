@@ -55,7 +55,7 @@ replacing PATHTOIMAGENET with the path that Imagenet is accessible on your syste
 
 
 
-- ### mobilenetv3-paraboloidout
+- ### mobilenetv3-pbout
 A MobileNetV3 model with a layer of paraboloid neurons as the output layer. 
 
 In terms of code, first we import the Library:
@@ -84,6 +84,37 @@ Run:
 python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.0  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidout True
 ```
 
+- ### mobilenetv3-pbfeat256
+
+While ```mobilenetv3-pbout``` achieves higher accuracy, it significantly increases the number of model parameters. To address this issue, we made another model that reduces the dimensionality of the feature vector from 1024 to 256 using a paraboloid neuron layer. The classification layer is still linear.
+
+In terms of code, first we import the Library:
+```
+try:
+    import geondpt as gpt
+except ImportError:
+    import geondptfree as gpt
+```
+
+Then we replace the existing output layer:
+```
+      model.classifier = nn.Sequential(
+      gpt.Paraboloid(model.classifier.in_features, 256, h_factor = 0.01, p_factor=0.0001, wd_factor = 1., input_factor = 0.1, output_factor = 0.1, grad_factor = 1., init = 'live'),
+      nn.Linear(256, 1000),
+
+```
+
+#### Evaluation
+Download the pretrained model and run:
+```
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --eval True --paraboloidout True --resume mobilenetv3pbout.pth.tar
+```
+replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
+#### Training from scratch
+Run:
+```
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidout True
+```
 
 
 
