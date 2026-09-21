@@ -1,6 +1,6 @@
 ### Overview
 
-This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer CNNs by replacing the output layer with a layer of paraboloid neurons.
+This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer lightweight CNNs by replacing the output layer with a layer of paraboloid neurons or using a layer of paraboloid neurons as a feature extractor. In the latter case, the resulting network is smaller and faster than the original network while achieving higher accuracy.
 
 |   Model           | Accuracy | Parameters |
 | ----------------- |-------- |-----------|
@@ -9,9 +9,9 @@ This repository is meant as a proof of concept for how paraboloid neurons can be
 | ```mobilenetv3-pbfeat256```         | 62.296% | **2,299,656** |
 
 
-# Using paraboloid neurons to train ResNet18 models on CIFAR100 with PyTorch
+# Using paraboloid neurons to train MobileNetV3 models on Imagenet with PyTorch
 
-Paraboloid neuron demonstration of the [GeoND Library](https://geond.tech) for [PyTorch](http://pytorch.org/) on the CIFAR100 dataset. If you are interested in trying out the library on your own datasets, please refer to the ["How to use"](https://geond.tech/geond-docs/) section of the documentation. This repository uses Version 1.1 of the GeoND Library. You can find download instructions here: [https://geond.tech/download/](https://geond.tech/download/). Adapted from [https://github.com/huggingface/pytorch-image-models](https://github.com/huggingface/pytorch-image-models).
+Paraboloid neuron demonstration of the [GeoND Library](https://geond.tech) for [PyTorch](http://pytorch.org/) on the Imagenet dataset. If you are interested in trying out the library on your own datasets, please refer to the ["How to use"](https://geond.tech/geond-docs/) section of the documentation. This repository uses Version 1.2 of the GeoND Library. You can find download instructions here: [https://geond.tech/download/](https://geond.tech/download/). Adapted from [https://github.com/huggingface/pytorch-image-models](https://github.com/huggingface/pytorch-image-models).
 
 ## Paraboloid neurons
 
@@ -36,28 +36,27 @@ wget -i models.txt
 ```
 
 ## Models
-- ### resnet18
-Our baseline ResNet18 model. After creating the model, we make some changes to accomodate the resolution of CIFAR100 images:
-```
-model.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
-model.maxpool = nn.Identity()
-```
+- ### mobilenetv3
+Our baseline MobileNetV3 model. 
+
 #### Evaluation
 Download the pretrained model and run:
 ```
-python train.py ./data --dataset torch/cifar100 --dataset-download --num-classes 100 --img-size 32 --epochs 300 --resume resnet18.pth.tar --eval true
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.9  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --eval True --resume mobilenetv3baseline.pth.tar
 ```
+replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
+
 #### Training from scratch
 Run:
 ```
-python train.py ./data --dataset torch/cifar100 --dataset-download --num-classes 100 --img-size 32 --opt sgd --momentum 0.9 --weight-decay 5e-4 --sched cosine --epochs 300 --lr 0.1 --batch-size 128 --min-lr 1e-5 --aa rand-m9-mstd0.5-inc1 --mixup 0.2 --cutmix 1.0 --reprob 0.25 --remode pixel --smoothing 0.1
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.9  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp
 ```
+replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
 
 
 
-
-- ### resnet18-paraboloidout
-A ResNet18 model (modified for CIFAR100 as above) with a layer of paraboloid neurons as the output layer. After the Version 1.2 update which fixed some issues with momentum, using momentum along with ```input_factor = 1.0``` gives the best result. The training script will handle this through a command line argument.
+- ### mobilenetv3-paraboloidout
+A MobileNetV3 model with a layer of paraboloid neurons as the output layer. 
 
 In terms of code, first we import the Library:
 ```
@@ -69,19 +68,20 @@ except ImportError:
 
 Then we replace the existing output layer:
 ```
-model.fc = gpt.ParaboloidOutput(model.fc.in_features, model.fc.out_features, h_factor = 0.01, wd_factor = 1., grad_factor = 1., input_factor = 1.0, output_factor = 0.1, p_factor=0.0001, init = 'spotlight')
+model.classifier = gpt.ParaboloidOutput(model.classifier.in_features, model.classifier.out_features, h_factor = 0.01, p_factor=0.0001, wd_factor = 1., grad_factor = 1., input_factor = 1., output_factor = 0.1, init = 'spotlight')
 ```
 Note that ```ParaboloidOutput``` is the same as ```Paraboloid```, it just uses a base configuration more appropriate for output layers.
 
 #### Evaluation
 Download the pretrained model and run:
 ```
-python train.py ./data --dataset torch/cifar100 --dataset-download --num-classes 100 --img-size 32 --paraboloidout True --eval True --resume resnet18-paraboloidout.pth.tar
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.0  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --eval True --paraboloidout True --resume mobilenetv3pbout.pth.tar
 ```
+replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
 #### Training from scratch
 Run:
 ```
-python train.py ./data --dataset torch/cifar100 --dataset-download --num-classes 100 --img-size 32 --opt sgd --momentum 0.7 --weight-decay 5e-4 --sched cosine --epochs 300 --lr 0.1 --batch-size 128 --min-lr 1e-5 --aa rand-m9-mstd0.5-inc1 --mixup 0.2 --cutmix 1.0 --reprob 0.25 --remode pixel --smoothing 0.1 --paraboloidout true
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.0  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidout True
 ```
 
 
@@ -94,23 +94,9 @@ python train.py ./data --dataset torch/cifar100 --dataset-download --num-classes
 
 
 
-## Exploration of the momentum parameter
 
-Below is a table with the accuracies of various ```resnet18-paraboloidout``` models for different combinations of momentum values and the use of nesterov momentum. The model seems to start having issues when the momentum is too high and/or further accelerated by nesterov momentum. The best accuracy that is achieved by the pretrained model was given using a momentum of 0.7 and no nesterov.
 
-|   Model           | Momentum | Accuracy |
-| ----------------- |-------- | -------- |
-| ```resnet18-paraboloidout```   |   0.1, nesterov = False   | 78.96% |
-| ```resnet18-paraboloidout```   |   0.2, nesterov = False   | 78.82% |
-| ```resnet18-paraboloidout```   |   0.4, nesterov = False   | 79.12% |
-| ```resnet18-paraboloidout```   |   0.5, nesterov = False   | 79.14% |
-| ```resnet18-paraboloidout```   |   0.5, nesterov = True   | 79.32% |
-| ```resnet18-paraboloidout```   |   0.6, nesterov = False   | 79.37% |
-| ```resnet18-paraboloidout```   |   0.6, nesterov = True   | 79.32% |
-| ```resnet18-paraboloidout```   |   0.7, nesterov = False   | **79.56%** |
-| ```resnet18-paraboloidout```   |   0.7, nesterov = True   | 79.44% |
-| ```resnet18-paraboloidout```   |   0.8, nesterov = False   | 78.87% |
-| ```resnet18-paraboloidout```   |   0.9, nesterov = False   | 77.46% |
+
 
 ## References
 - Original repository: [https://github.com/huggingface/pytorch-image-models](https://github.com/huggingface/pytorch-image-models)
