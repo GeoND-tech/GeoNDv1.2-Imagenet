@@ -2,10 +2,11 @@
 
 This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer CNNs by replacing the output layer with a layer of paraboloid neurons.
 
-|   Model           | Accuracy |
-| ----------------- |-------- |
-| ```resnet18``` - baseline   | 78.89% |
-| ```resnet18-paraboloidout```         | **79.56%** |
+|   Model           | Accuracy | Parameters |
+| ----------------- |-------- |-----------|
+| ```mobilenetv3``` - baseline   | 59.52% | 2,542,856 |
+| ```mobilenetv3-pbout```         | **64.686%** | 3,567,856 |
+| ```mobilenetv3-pbfeat256```         | 62.296% | **2,299,656** |
 
 
 # Using paraboloid neurons to train ResNet18 models on CIFAR100 with PyTorch
