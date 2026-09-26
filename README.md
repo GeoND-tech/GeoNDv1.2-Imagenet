@@ -1,12 +1,12 @@
 ### Overview
 
-This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer lightweight CNNs by replacing the output layer with a layer of paraboloid neurons or using a layer of paraboloid neurons as a feature extractor. In the latter case, the resulting network is smaller and faster than the original network while achieving higher accuracy.
+This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer lightweight CNNs by replacing the output layer with a layer of paraboloid neurons or using a layer of paraboloid neurons as a feature extractor. In the latter case, the resulting network is smaller and faster than the original network while achieving higher accuracy. All networks were trained for 100 epochs.
 
-|   Model           | Accuracy | Parameters |
-| ----------------- |-------- |-----------|
-| ```mobilenetv3``` - baseline   | 59.52% | 2,542,856 |
-| ```mobilenetv3-pbout```         | **64.686%** | 3,567,856 |
-| ```mobilenetv3-pbfeat256```         | 62.296% | **2,299,656** |
+|   Model           | Loss | Accuracy | Parameters |
+| ----------------- |-------- |-----------|--------|
+| ```mobilenetv3``` - baseline  | 2.844283835968184  | 59.52% | 2,542,856 |
+| ```mobilenetv3-pbout```       | **2.5630333415753763**  | **64.686%** | 3,567,856 |
+| ```mobilenetv3-pbfeat256```     |  2.7319849107229506   | 62.296% | **2,299,656** |
 
 
 # Using paraboloid neurons to train MobileNetV3 models on Imagenet with PyTorch
