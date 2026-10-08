@@ -2,11 +2,12 @@
 
 This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer lightweight CNNs by replacing the output layer with a layer of paraboloid neurons or using a layer of paraboloid neurons as a feature extractor. In the latter case, the resulting network is smaller and faster than the original network while achieving higher accuracy. All networks were trained for 100 epochs.
 
-|   Model           | Loss | Accuracy | Parameters |
-| ----------------- |-------- |-----------|--------|
-| ```mobilenetv3``` - baseline  | 2.844283835968184  | 59.52% | 2,542,856 |
-| ```mobilenetv3-pbout```       | **2.5630333415753763**  | **64.686%** | 3,567,856 |
-| ```mobilenetv3-pbfeat256```     |  2.7319849107229506   | 62.296% | **2,299,656** |
+|   Model           | Loss | Accuracy | Parameters | Training log
+| ----------------- |-------- |-----------|--------|--------|
+| ```mobilenetv3``` - baseline  | 2.844283835968184  | 59.52% | 2,542,856 | [link](https://github.com/GeoND-tech/GeoNDv1.2-Imagenet/blob/main/mobilenetv3baseline.csv) |
+| ```mobilenetv3-pbout```       | **2.5630333415753763**  | **64.686%** | 3,567,856 | [link](https://github.com/GeoND-tech/GeoNDv1.2-Imagenet/blob/main/mobilenetv3pbout.csv) |
+| ```mobilenetv3-pbfeat256```     |  2.7319849107229506   | 62.296% | 2,299,656 | [link](https://github.com/GeoND-tech/GeoNDv1.2-Imagenet/blob/main/mobilenetv3pbfeat256.csv) |
+| ```mobilenetv3-pbfeat128```     |  2.768398392103997   | 61.702% | **1,909,256** | [link](https://github.com/GeoND-tech/GeoNDv1.2-Imagenet/blob/main/mobilenetv3pbfeat128.csv) |
 
 
 # Using paraboloid neurons to train MobileNetV3 models on Imagenet with PyTorch
@@ -120,6 +121,39 @@ replacing PATHTOIMAGENET with the path that Imagenet is accessible on your syste
 
 
 
+
+- ### mobilenetv3-pbfeat128
+
+We also tried reducing the dimensionality of the feature vector from 1024 to 128 using a paraboloid neuron layer. The classification layer is still linear.
+
+In terms of code, first we import the Library:
+```
+try:
+    import geondpt as gpt
+except ImportError:
+    import geondptfree as gpt
+```
+
+Then we replace the existing output layer:
+```
+      model.classifier = nn.Sequential(
+      gpt.Paraboloid(model.classifier.in_features, 128, h_factor = 0.01, p_factor=0.0001, wd_factor = 1., input_factor = 0.1, output_factor = 0.1, grad_factor = 1., init = 'live'),
+      nn.Linear(128, 1000),
+
+```
+
+#### Evaluation
+Download the pretrained model and run:
+```
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidfeat128 True --eval True --resume mobilenetv3pbfeat128.pth.tar
+```
+replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
+#### Training from scratch
+Run:
+```
+python train.py  --data-dir PATHTOIMAGENET   --epochs 100   --batch-size 128   --opt sgd   --lr 0.1   --momentum 0.01  --weight-decay 5e-4   --sched cosine   --warmup-epochs 5   --amp --paraboloidfeat128 True
+```
+replacing PATHTOIMAGENET with the path that Imagenet is accessible on your system.
 
 
 
