@@ -1,3 +1,4 @@
 geond.tech/models/v1.2/Imagenet/mobilenetv3baseline.pth.tar
+geond.tech/models/v1.2/Imagenet/mobilenetv3pbfeat128.pth.tar
 geond.tech/models/v1.2/Imagenet/mobilenetv3pbfeat256.pth.tar
 geond.tech/models/v1.2/Imagenet/mobilenetv3pbout.pth.tar
