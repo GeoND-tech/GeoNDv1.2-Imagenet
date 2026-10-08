@@ -1,6 +1,6 @@
 ### Overview
 
-This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer lightweight CNNs by replacing the output layer with a layer of paraboloid neurons or using a layer of paraboloid neurons as a feature extractor. In the latter case, the resulting network is smaller and faster than the original network while achieving higher accuracy. All networks were trained for 100 epochs.
+This repository is meant as a proof of concept for how paraboloid neurons can be used to improve the accuracy of non-transformer lightweight CNNs by replacing the output layer with a layer of paraboloid neurons or using a layer of paraboloid neurons as a feature extractor. In the latter case, the resulting network is smaller and faster than the original network while achieving higher accuracy. All networks were trained for 100 epochs on the Imagenet dataset.
 
 |   Model           | Loss | Accuracy | Parameters | Training log
 | ----------------- |-------- |-----------|--------|--------|
