@@ -435,6 +435,8 @@ parser.add_argument('--paraboloidout', default=False,
                    help='Replaces the output layer with paraboloid neuron layer')
 parser.add_argument('--paraboloidfeat256', default=False,
                    help='Inserts a 256 paraboloid neuron layer before the output layer')
+parser.add_argument('--paraboloidfeat128', default=False,
+                   help='Inserts a 128 paraboloid neuron layer before the output layer')
 parser.add_argument('--eval', default=False,
                    help='Evaluate the performance of the model on the validation set')
 
@@ -528,6 +530,12 @@ def main():
     if (args.paraboloidout) and (args.paraboloidfeat256):
       print("--paraboloidout and --paraboloidfeat256 are mutually exclusive at this time.")
       quit()
+    if (args.paraboloidout) and (args.paraboloidfeat128):
+      print("--paraboloidout and --paraboloidfeat128 are mutually exclusive at this time.")
+      quit()
+    if (args.paraboloidfeat128) and (args.paraboloidfeat256):
+      print("--paraboloidfeat128 and --paraboloidfeat256 are mutually exclusive at this time.")
+      quit()
     
     if (args.paraboloidout):
       model.classifier = gpt.ParaboloidOutput(model.classifier.in_features, model.classifier.out_features, h_factor = 0.01, p_factor=0.0001, wd_factor = 1., grad_factor = 1., input_factor = 1., output_factor = 0.1, init = 'spotlight')
@@ -535,6 +543,11 @@ def main():
       model.classifier = nn.Sequential(
       gpt.Paraboloid(model.classifier.in_features, 256, h_factor = 0.01, p_factor=0.0001, wd_factor = 1., input_factor = 0.1, output_factor = 0.1, grad_factor = 1., init = 'live'),
       nn.Linear(256, 1000),
+    )
+    if (args.paraboloidfeat128):
+      model.classifier = nn.Sequential(
+      gpt.Paraboloid(model.classifier.in_features, 128, h_factor = 0.01, p_factor=0.0001, wd_factor = 1., input_factor = 0.1, output_factor = 0.1, grad_factor = 1., init = 'live'),
+      nn.Linear(128, 1000),
     )
 
     
@@ -623,6 +636,8 @@ def main():
     if (args.paraboloidout):
       optimizer = gpt.GeoNDSGD(model.parameters(), lr = 0.1, weight_decay = 5e-4, momentum = 0.0, nesterov = False)
     if (args.paraboloidfeat256):
+      optimizer = gpt.GeoNDSGD(model.parameters(), lr = 0.1, weight_decay = 5e-4, momentum = 0.01, nesterov = False)
+    if (args.paraboloidfeat128):
       optimizer = gpt.GeoNDSGD(model.parameters(), lr = 0.1, weight_decay = 5e-4, momentum = 0.01, nesterov = False)
     if utils.is_primary(args):
         defaults = copy.deepcopy(optimizer.defaults)
