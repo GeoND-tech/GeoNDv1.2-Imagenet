@@ -12,7 +12,7 @@ This repository is meant as a proof of concept for how paraboloid neurons can be
 
 # Using paraboloid neurons to train MobileNetV3 models on Imagenet with PyTorch
 
-Paraboloid neuron demonstration of the [GeoND Library](https://geond.tech) for [PyTorch](http://pytorch.org/) on the Imagenet dataset. If you are interested in trying out the library on your own datasets, please refer to the ["How to use"](https://geond.tech/geond-docs/) section of the documentation. This repository uses Version 1.2 of the GeoND Library. You can find download instructions here: [https://geond.tech/download/](https://geond.tech/download/). Adapted from [https://github.com/huggingface/pytorch-image-models](https://github.com/huggingface/pytorch-image-models).
+Paraboloid neuron demonstration of the [GeoND Library](https://geond.tech) for [PyTorch](http://pytorch.org/) on the Imagenet dataset. If you are interested in trying out the library on your own datasets, please refer to the ["How to use"](https://geond.tech/docs/v1.2/howtouse.html#) section of the documentation. This repository uses Version 1.2 of the GeoND Library. You can find download instructions here: [https://geond.tech/download/](https://geond.tech/download/). Adapted from [https://github.com/huggingface/pytorch-image-models](https://github.com/huggingface/pytorch-image-models).
 
 ## Paraboloid neurons
 
